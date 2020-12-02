@@ -1,18 +1,31 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import { Start } from './components/Start';
+import Start from './components/Start';
+import Chat from './components/Chat';
+import { PickerIOSComponent } from 'react-native';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+const App = (props) => {
   return (
-    <View style={styles.container}>
-      <Start />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name='Start'
+          component={Start}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Chat'
+          component={Chat}
+          options={({ route }) => ({ title: route.params.name })}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+export default App;
