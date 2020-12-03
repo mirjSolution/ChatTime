@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { Icon } from 'react-native-elements';
 
@@ -138,7 +139,14 @@ const Start = ({ navigation }) => {
 
   return (
     <ImageBackground source={image} style={styles.image}>
-      <KeyboardAvoidingView style={styles.container} behavior='padding'>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior='height'
+        keyboardVerticalOffset={Platform.select({
+          ios: () => 200,
+          android: () => 200,
+        })()}
+      >
         <Text style={styles.appTitle}>ChatTime</Text>
         <View style={styles.box1}>
           <View style={styles.yourContainer}>
