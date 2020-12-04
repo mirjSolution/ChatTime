@@ -134,6 +134,7 @@ const Start = ({ navigation }) => {
     navigation.navigate('Chat', {
       name: `${text}`,
       backColor: `${backColor}`,
+      randomId: Math.random().toString(36).substring(7),
     });
   };
 
