@@ -77,7 +77,8 @@ const Chat = (props) => {
   // Append messages to gifted chat
   async function appendMessages(messages) {
     setMessages((prevState) => GiftedChat.append(prevState, messages));
-    await AsyncStorage.setItem('messages', JSON.stringify(messages));
+    // Enable in production
+    // await AsyncStorage.setItem('messages', JSON.stringify(messages));
   }
 
   // Get messages from Async Storage when offline
