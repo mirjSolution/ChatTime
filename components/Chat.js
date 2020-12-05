@@ -1,6 +1,8 @@
 // @refresh reset
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, LogBox } from 'react-native';
+import { StyleSheet, View, LogBox, ActivityIndicator } from 'react-native';
+
+import MapView from 'react-native-maps';
 
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 
@@ -9,8 +11,6 @@ import 'firebase/firestore';
 
 import AsyncStorage from '@react-native-community/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-
-import { MapView, Location } from 'expo';
 
 import CustomActions from './CustomActions';
 
@@ -41,7 +41,7 @@ const Chat = (props) => {
   });
 
   // States
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
 
@@ -157,18 +157,20 @@ const Chat = (props) => {
     const message = messages[0];
     messageRef.add({
       _id: message._id,
-      text: message.text,
+      text: message.text || null,
+      createdAt: message.createdAt,
       user: message.user,
       image: message.image || null,
       location: message.location || null,
     });
-    appendMessages(message);
+    console.log(message);
   };
 
   // render custom actions
   const renderCustomActions = (props) => <CustomActions {...props} />;
 
   // Screen View
+
   return (
     <View style={styles.container}>
       <GiftedChat
@@ -179,6 +181,11 @@ const Chat = (props) => {
         user={user}
         renderActions={renderCustomActions}
         renderCustomView={renderCustomView}
+        renderLoading={() => {
+          return (
+            <ActivityIndicator style={{ flex: 1 }} size='large' color='blue' />
+          );
+        }}
       />
     </View>
   );

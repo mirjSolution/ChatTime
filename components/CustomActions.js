@@ -1,6 +1,13 @@
 import React, { createRef } from 'react';
 
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  LogBox,
+  Platform,
+} from 'react-native';
 import ActionSheet from 'react-native-actions-sheet';
 
 import * as Permissions from 'expo-permissions';
@@ -10,6 +17,8 @@ import * as Location from 'expo-location';
 import firebase from 'firebase';
 
 const actionSheetRef = createRef();
+
+LogBox.ignoreAllLogs();
 
 const CustomActions = (props) => {
   // Image Picker
