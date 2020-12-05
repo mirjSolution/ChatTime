@@ -62,8 +62,8 @@ const Chat = (props) => {
           setIsConnected(true);
         } else {
           // Offline will load asyncstorage
-          getMessages();
-          setIsConnected(false);
+          // getMessages();
+          // setIsConnected(false);
         }
       });
     });
