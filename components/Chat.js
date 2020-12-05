@@ -244,7 +244,7 @@ const Chat = (props) => {
     }
   };
 
-  // Delete messages from Async Storage
+  // Delete messages from Async Storage after testing
   async function deleteMessages() {
     try {
       await AsyncStorage.removeItem('messages');
