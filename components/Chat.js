@@ -211,7 +211,7 @@ const Chat = (props) => {
     await AsyncStorage.setItem('messages', JSON.stringify(messages));
   }
 
-  // Get user from Async Storage when offline
+  // Get messages from Async Storage when offline
   async function getMessages() {
     const messages = await AsyncStorage.getItem('messages');
     setMessages((prevState) =>
