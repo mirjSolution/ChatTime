@@ -15,6 +15,7 @@ import { Icon } from 'react-native-elements';
 const image = require('../assets/background-image.png');
 
 const Start = ({ navigation }) => {
+  // Aesthetics
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -124,9 +125,11 @@ const Start = ({ navigation }) => {
     },
   });
 
+  // States
   const [text, setText] = useState('');
   const [backColor, setBackColor] = useState('#fff');
 
+  // Function onPresschat
   const onPressChat = (text, backColor) => {
     if (text === '') {
       return Alert.alert('Please Enter Your Name to Continue.');

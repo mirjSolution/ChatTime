@@ -130,12 +130,13 @@
 // export default Chat;
 
 // @refresh reset
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, LogBox } from 'react-native';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import AsyncStorage from '@react-native-community/async-storage';
+import NetInfo from '@react-native-community/netinfo';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDPNUJQmfvhe5gkiMiHUkPqS4g-SS9UNuY',
@@ -154,13 +155,8 @@ LogBox.ignoreLogs(['Setting a timer for a long period of time', 'undefined']);
 const db = firebase.firestore();
 const messageRef = db.collection('messages');
 
-const renderBubble = (props) => {
-  return (
-    <Bubble {...props} wrapperStyle={{ right: { backgroundColor: '#000' } }} />
-  );
-};
-
 const Chat = (props) => {
+  // Aesthetics
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -168,8 +164,10 @@ const Chat = (props) => {
     },
   });
 
+  // States
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     const authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
@@ -188,10 +186,19 @@ const Chat = (props) => {
         })
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-      appendMessages(messagesFirestore);
-      // getMessages();
+      NetInfo.fetch().then((connection) => {
+        if (connection.isConnected) {
+          // online will load firebase
+          appendMessages(messagesFirestore);
+          setIsConnected(true);
+        } else {
+          // Offline will load asyncstorage
+          getMessages();
+          setIsConnected(false);
+        }
+      });
     });
-
+    // Component will unmount
     return () => {
       unsubscribe();
       authUnsubscribe();
@@ -219,6 +226,24 @@ const Chat = (props) => {
     setUser(user);
   };
 
+  // Optional you can change the color of the bubble
+  const renderBubble = (props) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{ right: { backgroundColor: '#000' } }}
+      />
+    );
+  };
+
+  // Disable send in chat when offline
+  const renderInputToolbar = (props) => {
+    if (isConnected === false) {
+    } else {
+      return <InputToolbar {...props} />;
+    }
+  };
+
   // Delete messages from Async Storage
   async function deleteMessages() {
     try {
@@ -240,6 +265,7 @@ const Chat = (props) => {
       <GiftedChat
         messages={messages}
         // renderBubble={renderBubble}
+        renderInputToolbar={renderInputToolbar}
         onSend={onSend}
         user={user}
       />
