@@ -1,13 +1,18 @@
 // @refresh reset
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, LogBox, Button, Image } from 'react-native';
+import { StyleSheet, View, LogBox } from 'react-native';
+
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
+
 import * as firebase from 'firebase';
 import 'firebase/firestore';
+
 import AsyncStorage from '@react-native-community/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-import * as Permissions from 'expo-permissions';
-import * as ImagePicker from 'expo-image-picker';
+
+import { MapView, Location } from 'expo';
+
+import CustomActions from './CustomActions';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDPNUJQmfvhe5gkiMiHUkPqS4g-SS9UNuY',
@@ -39,15 +44,16 @@ const Chat = (props) => {
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
-  const [image, setImage] = useState(null);
 
   useEffect(() => {
     const authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      // Sign in user anonymously in firebase
       if (!user) {
         firebase.auth().signInAnonymously();
       }
       saveIdUserAS(user.uid, props.route.params.name);
     });
+    // Get save data in firestore filtered and sorted
     const unsubscribe = messageRef.onSnapshot((querySnapshot) => {
       const messagesFirestore = querySnapshot
         .docChanges()
@@ -57,7 +63,7 @@ const Chat = (props) => {
           return { ...message, createdAt: message.createdAt.toDate() };
         })
         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-
+      // Check if you are connected to wi-fi or LTE
       NetInfo.fetch().then((connection) => {
         if (connection.isConnected) {
           // online will load firebase
@@ -117,6 +123,25 @@ const Chat = (props) => {
     }
   };
 
+  //custom map view
+  const renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
+  };
+
   // Delete messages from Async Storage after testing
   const deleteMessages = async () => {
     try {
@@ -128,41 +153,20 @@ const Chat = (props) => {
   };
 
   // Save messages on Fire base
-  const onSend = async (messages) => {
-    const chats = messages.map((m) => messageRef.add(m));
-    await Promise.all(chats);
+  const onSend = (messages) => {
+    const message = messages[0];
+    messageRef.add({
+      _id: message._id,
+      text: message.text,
+      user: message.user,
+      image: message.image || null,
+      location: message.location || null,
+    });
+    appendMessages(message);
   };
 
-  // Pick Image
-  const pickImage = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-    if (status === 'granted') {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: 'Images',
-      }).catch((error) => console.log(error));
-
-      if (!result.cancelled) {
-        setImage(result);
-      }
-    }
-  };
-
-  // Take photo
-  const takePhoto = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    // const { status1 } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-    if (status === 'granted') {
-      let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: 'Images',
-      }).catch((error) => console.log(error));
-
-      if (!result.cancelled) {
-        setImage(result);
-      }
-    }
-  };
+  // render custom actions
+  const renderCustomActions = (props) => <CustomActions {...props} />;
 
   // Screen View
   return (
@@ -173,17 +177,9 @@ const Chat = (props) => {
         renderInputToolbar={renderInputToolbar}
         onSend={onSend}
         user={user}
+        renderActions={renderCustomActions}
+        renderCustomView={renderCustomView}
       />
-      <View style={{ flex: 1, justifyContent: 'center' }}>
-        <Button title='Pick an image from the library' onPress={pickImage} />
-        <Button title='Take a photo' onPress={takePhoto} />
-        {image && (
-          <Image
-            source={{ uri: image.uri }}
-            style={{ width: 200, height: 200 }}
-          />
-        )}
-      </View>
     </View>
   );
 };

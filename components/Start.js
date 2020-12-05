@@ -141,6 +141,7 @@ const Start = ({ navigation }) => {
     });
   };
 
+  // Screen View
   return (
     <ImageBackground source={image} style={styles.image}>
       <KeyboardAvoidingView
