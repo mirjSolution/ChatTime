@@ -1,11 +1,13 @@
 // @refresh reset
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, LogBox } from 'react-native';
+import { StyleSheet, View, LogBox, Button, Image } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import AsyncStorage from '@react-native-community/async-storage';
 import NetInfo from '@react-native-community/netinfo';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDPNUJQmfvhe5gkiMiHUkPqS4g-SS9UNuY',
@@ -37,6 +39,7 @@ const Chat = (props) => {
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(false);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     const authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
@@ -75,19 +78,19 @@ const Chat = (props) => {
   }, []);
 
   // Append messages to gifted chat
-  async function appendMessages(messages) {
+  const appendMessages = async (messages) => {
     setMessages((prevState) => GiftedChat.append(prevState, messages));
     // Enable in production
     // await AsyncStorage.setItem('messages', JSON.stringify(messages));
-  }
+  };
 
   // Get messages from Async Storage when offline
-  async function getMessages() {
+  const getMessages = async () => {
     const messages = await AsyncStorage.getItem('messages');
     setMessages((prevState) =>
       GiftedChat.append(prevState, JSON.parse(messages))
     );
-  }
+  };
 
   // Set user
   const saveIdUserAS = (uid, name) => {
@@ -115,21 +118,53 @@ const Chat = (props) => {
   };
 
   // Delete messages from Async Storage after testing
-  async function deleteMessages() {
+  const deleteMessages = async () => {
     try {
       await AsyncStorage.removeItem('messages');
       setMessages([]);
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   // Save messages on Fire base
-  async function onSend(messages) {
+  const onSend = async (messages) => {
     const chats = messages.map((m) => messageRef.add(m));
     await Promise.all(chats);
-  }
+  };
 
+  // Pick Image
+  const pickImage = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+    if (status === 'granted') {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: 'Images',
+      }).catch((error) => console.log(error));
+
+      if (!result.cancelled) {
+        setImage(result);
+      }
+    }
+  };
+
+  // Take photo
+  const takePhoto = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    // const { status1 } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+    if (status === 'granted') {
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: 'Images',
+      }).catch((error) => console.log(error));
+
+      if (!result.cancelled) {
+        setImage(result);
+      }
+    }
+  };
+
+  // Screen View
   return (
     <View style={styles.container}>
       <GiftedChat
@@ -139,6 +174,16 @@ const Chat = (props) => {
         onSend={onSend}
         user={user}
       />
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <Button title='Pick an image from the library' onPress={pickImage} />
+        <Button title='Take a photo' onPress={takePhoto} />
+        {image && (
+          <Image
+            source={{ uri: image.uri }}
+            style={{ width: 200, height: 200 }}
+          />
+        )}
+      </View>
     </View>
   );
 };
