@@ -77,7 +77,7 @@ expo start
 
 ## Demo
 
-The APP is live, just scan the QR Code to use it (https://expo.io/@mirjsolution/projects/chat-application)
+The APP is live, just open the link and scan the QR Code to use it (https://expo.io/@mirjsolution/projects/chat-application)
 
 - Version: 1.0.0
 - License: MIT
