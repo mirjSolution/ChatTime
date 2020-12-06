@@ -73,7 +73,7 @@ expo start
 - If you want to explore some other way or test on your local machine you should download Android Studio for Android devices and XCode for IOS devices, make sure you have a lot of space on your local drive and a caveat with this is the complexity. Below are the link with detailed steps on installing it.
 
 - [Expo IOS Documentation](https://docs.expo.io/workflow/ios-simulator/)
-- [Expo Android Documentation](hhttps://docs.expo.io/workflow/android-studio-emulator/)
+- [Expo Android Documentation](https://docs.expo.io/workflow/android-studio-emulator/)
 
 ## Demo
 
