@@ -174,10 +174,16 @@ const Start = ({ navigation }) => {
             </Text>
             <View style={styles.chatButtonColor}>
               <TouchableOpacity
+                accessible={true}
+                accessibilityLabel='Backgorund color'
+                accessibilityHint='Let’s you choose to change the background color of chat message'
                 onPress={() => setBackColor('#090C08')}
                 style={styles.chatButton1}
               ></TouchableOpacity>
               <TouchableOpacity
+                accessible={true}
+                accessibilityLabel='Backgorund color'
+                accessibilityHint='Let’s you choose to change the background color of chat message'
                 onPress={() => setBackColor('#474056')}
                 style={styles.chatButton2}
               ></TouchableOpacity>
@@ -186,12 +192,18 @@ const Start = ({ navigation }) => {
                 style={styles.chatButton3}
               ></TouchableOpacity>
               <TouchableOpacity
+                accessible={true}
+                accessibilityLabel='Backgorund color'
+                accessibilityHint='Let’s you choose to change the background color of chat message'
                 onPress={() => setBackColor('#B9C6AE')}
                 style={styles.chatButton4}
               ></TouchableOpacity>
             </View>
           </View>
           <TouchableOpacity
+            accessible={true}
+            accessibilityLabel='Start Chatting'
+            accessibilityHint='Let you start chatting'
             style={styles.chatStartButton}
             onPress={() => onPressChat(text, backColor)}
           >
