@@ -7,7 +7,6 @@ Chat app for mobile devices using React Native. The app will provide users with 
 ## Features
 
 - Users can enter their name and choose a background color for the chat screen before joining the chat.
-- Show/hide event details.
 - Displaying the conversation, as well as an input field and submit button.
 - Provide users with two additional communication features: sending images
   and location data.
