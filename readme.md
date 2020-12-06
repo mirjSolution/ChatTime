@@ -17,7 +17,7 @@ Chat app for mobile devices using React Native. The app will provide users with 
 - Developed using Expo.
 - Chat conversations stored in Google Firestore Database.
 - Users can pick and send images from the phone’s image library.
-- Users take pictures with the device’s camera app, and send them.
+- Users take pictures with the device’s camera app, and send it.
 - Images stored in Firebase Cloud Storage.
 - Read and send the user’s location data.
 
@@ -77,7 +77,7 @@ expo start
 
 ## Demo
 
-The APP is live at (https://expo.io/@mirjsolution/projects/chat-application)
+The APP is live, just scan the QR Code to use it (https://expo.io/@mirjsolution/projects/chat-application)
 
 - Version: 1.0.0
 - License: MIT
