@@ -7,8 +7,10 @@ import 'firebase/firestore';
 import AsyncStorage from '@react-native-community/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 
+import { API_TOKEN } from '@env';
+
 const firebaseConfig = {
-  apiKey: 'AIzaSyDPNUJQmfvhe5gkiMiHUkPqS4g-SS9UNuY',
+  apiKey: API_TOKEN,
   authDomain: 'chattime-15ada.firebaseapp.com',
   projectId: 'chattime-15ada',
   storageBucket: 'chattime-15ada.appspot.com',
