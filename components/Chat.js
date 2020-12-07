@@ -15,7 +15,7 @@ import NetInfo from '@react-native-community/netinfo';
 import CustomActions from './CustomActions';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDPNUJQmfvhe5gkiMiHUkPqS4g-SS9UNuY',
+  apiKey: '',
   authDomain: 'chattime-15ada.firebaseapp.com',
   projectId: 'chattime-15ada',
   storageBucket: 'chattime-15ada.appspot.com',
