@@ -74,11 +74,6 @@ expo start
 
 - [Expo IOS Documentation](https://docs.expo.io/workflow/ios-simulator/)
 - [Expo Android Documentation](https://docs.expo.io/workflow/android-studio-emulator/)
-
-## Demo
-
-The APP is live, just open the link and scan the QR Code to use it (https://expo.io/@mirjsolution/projects/chat-application)
-
 - Version: 1.0.0
 - License: MIT
 - Author: Rico John Dato-on
